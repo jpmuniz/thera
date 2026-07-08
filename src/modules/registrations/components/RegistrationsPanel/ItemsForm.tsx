@@ -22,12 +22,18 @@ export function ItemsForm() {
   });
 
   async function onSubmit(data: ItemFormData) {
-    await createItem.mutateAsync(data);
-    form.reset({
-      sku: "",
-      description: "",
-      unit: ""
-    });
+    try {
+      await createItem.mutateAsync(data);
+      form.reset({
+        sku: "",
+        description: "",
+        unit: ""
+      });
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Erro ao criar Item:", error);
+      }
+    }
   }
 
   return (

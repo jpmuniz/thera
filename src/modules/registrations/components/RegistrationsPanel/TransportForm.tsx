@@ -20,11 +20,17 @@ export function TransportForm() {
   });
 
   async function onSubmit(data: TransportFormData) {
-    await createTransportType.mutateAsync(data);
-    form.reset({
-      name: "",
-      active: true
-    });
+    try {
+      await createTransportType.mutateAsync(data);
+      form.reset({
+        name: "",
+        active: true
+      });
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Erro ao criar transporte:", error);
+      }
+    }
   }
 
   return (
