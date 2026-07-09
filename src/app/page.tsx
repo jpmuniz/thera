@@ -17,11 +17,6 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand">OVGS</p>
             <h1 className="text-3xl font-semibold text-ink">Gestão de Ordens de Venda</h1>
           </div>
-          <div className="grid grid-cols-3 gap-2 text-sm">
-            <span className="rounded-md border border-line px-3 py-2 text-center">REST mock</span>
-            <span className="rounded-md border border-line px-3 py-2 text-center">Auditoria</span>
-            <span className="rounded-md border border-line px-3 py-2 text-center">Saga</span>
-          </div>
         </div>
       </header>
       <div className="mx-auto grid max-w-7xl gap-5 px-5 py-5">
