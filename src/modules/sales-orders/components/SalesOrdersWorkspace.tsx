@@ -29,7 +29,8 @@ export function SalesOrdersWorkspace() {
 
   const orders = salesOrders.data ?? [];
   const selectedOrder = orders.find((order) => order.id === selectedId) ?? orders[0];
-
+  const HAS_NO_ORDERS = !!orders.length ;
+  console.log(HAS_NO_ORDERS)
   async function onSubmit(data: FormData) {
     const order = await createSalesOrder.mutateAsync({
       customerId: data.customerId,
@@ -67,25 +68,31 @@ export function SalesOrdersWorkspace() {
         />
 
         <div className="grid gap-3">
-        <SalesOrdersTable
-            orders={orders}
-            customers={customers.data ?? []}
-            transportTypes={transportTypes.data ?? []}
-            isUpdating={updateStatus.isPending}
-            onSelect={(id: string)=>dispatch(salesOrderSelected(id))}
-            onAdvance={advance}
-          />
-          
-          {selectedOrder && (
-            <SalesOrderDetails
-              order={selectedOrder}
-              items={items.data ?? []}
+          {HAS_NO_ORDERS ? (
+            <>
+            <SalesOrdersTable
+              orders={orders}
+              customers={customers.data ?? []}
               transportTypes={transportTypes.data ?? []}
-              updateTransport={updateTransport}
-              updateStatus={updateStatus}
-              onChangeTransport={changeTransport}
-            /> 
+              isUpdating={updateStatus.isPending}
+              onSelect={(id: string)=>dispatch(salesOrderSelected(id))}
+              onAdvance={advance}
+            />
+            {selectedOrder && (
+              <SalesOrderDetails
+                order={selectedOrder}
+                items={items.data ?? []}
+                transportTypes={transportTypes.data ?? []}
+                updateTransport={updateTransport}
+                updateStatus={updateStatus}
+                onChangeTransport={changeTransport}
+              /> 
+            )}            
+          </>
+          ) : (
+              <p className="px-3 py-4 text-sm text-muted">Nenhuma ordem de venda </p>
           )}
+           
         </div>
       </div>
     </Panel>
