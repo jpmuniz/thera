@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Panel } from "@/shared/components/Panel";
@@ -16,9 +17,9 @@ import type { SalesOrder } from "@/shared/types";
 
 export function SalesOrdersWorkspace() {
   const dispatch = useAppDispatch();
+  const [successMessage, setSuccessMessage] = useState("");
   const filters = useAppSelector((state) => state.monitoring);
   const selectedId = useAppSelector((state) => state.ui.selectedSalesOrderId);
-  const lastEvent = useAppSelector((state) => state.ui.lastEvent);
   const { customers, transportTypes, items } = useRegistrations();
 
   const {
@@ -45,15 +46,14 @@ export function SalesOrdersWorkspace() {
 
   async function handleCreateOrder(data: FormData) {
     try {
-      await createOrder(data);
-  
+      const response = await createOrder(data);
       form.reset({
         customerId: "",
         transportTypeId: "",
         itemId: "",
         quantity: 1,
       });
-  
+      setSuccessMessage(`${response?.code} criada`);
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.error("Erro ao criar ordem de venda", error);
@@ -95,7 +95,7 @@ export function SalesOrdersWorkspace() {
           customers={customers.data ?? []}
           items={items.data ?? []}
           createSalesOrder={createSalesOrder}
-          lastEvent={lastEvent ?? ""}
+          lastEvent={successMessage ?? ""}
           onSubmit={handleCreateOrder}
           transportTypes={transportTypes.data ?? []}
         />
