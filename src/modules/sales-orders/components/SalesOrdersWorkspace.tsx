@@ -6,14 +6,13 @@ import { Panel } from "@/shared/components/Panel";
 import { SalesOrderForm } from "./SalesOrderForm";
 import { SalesOrdersTable } from "./SalesOrdersTable";
 import { SalesOrderDetails } from "./SalesOrderDetails"
-import { getNextStatus, STATUS_LABELS } from "@/shared/status";
 import { useRegistrations } from "@/modules/registrations/hooks/useRegistrations";
+import { useSalesOrdersActions } from "@/modules/sales-orders/hooks/useSalesOrdersActions";
 import { useSalesOrders } from "@/modules/sales-orders/hooks/useSalesOrders";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { domainEventRequested, salesOrderSelected } from "@/store/uiSlice";
-import type { SalesOrder } from "@/shared/types";
+import { salesOrderSelected } from "@/store/uiSlice";
 import { FormData, schema } from "../helpers/salesOrderForm.schema"
-
+import type { SalesOrder } from "@/shared/types";
 
 export function SalesOrdersWorkspace() {
   const dispatch = useAppDispatch();
@@ -21,7 +20,20 @@ export function SalesOrdersWorkspace() {
   const selectedId = useAppSelector((state) => state.ui.selectedSalesOrderId);
   const lastEvent = useAppSelector((state) => state.ui.lastEvent);
   const { customers, transportTypes, items } = useRegistrations();
-  const { salesOrders, createSalesOrder, updateStatus, updateTransport } = useSalesOrders(filters);
+
+  const {
+    salesOrders,
+  } = useSalesOrders(filters);
+  
+  const {
+    createOrder,
+    advanceOrder,
+    changeOrderTransport,
+    createSalesOrder,
+    updateStatus,
+    updateTransport,
+  } = useSalesOrdersActions(filters);
+  
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: { customerId: "", transportTypeId: "", itemId: "", quantity: 1 }
@@ -30,28 +42,49 @@ export function SalesOrdersWorkspace() {
   const orders = salesOrders.data ?? [];
   const selectedOrder = orders.find((order) => order.id === selectedId) ?? orders[0];
   const HAS_NO_ORDERS = !!orders.length ;
-  console.log(HAS_NO_ORDERS)
-  async function onSubmit(data: FormData) {
-    const order = await createSalesOrder.mutateAsync({
-      customerId: data.customerId,
-      transportTypeId: data.transportTypeId,
-      items: [{ itemId: data.itemId, quantity: Number(data.quantity) }]
-    });
-    dispatch(salesOrderSelected(order.id));
-    dispatch(domainEventRequested(`OV ${order.code} criada`));
-    form.reset({ customerId: "", transportTypeId: "", itemId: "", quantity: 1 });
+
+  async function handleCreateOrder(data: FormData) {
+    try {
+      await createOrder(data);
+  
+      form.reset({
+        customerId: "",
+        transportTypeId: "",
+        itemId: "",
+        quantity: 1,
+      });
+  
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Erro ao criar ordem de venda", error);
+      }
+    }
   }
 
-  async function advance(order: SalesOrder) {
-    const next = getNextStatus(order.status);
-    if (!next) return;
-    await updateStatus.mutateAsync({ id: order.id, status: next });
-    dispatch(domainEventRequested(`OV ${order.code}: ${STATUS_LABELS[next]}`));
+  async function handleAdvanceOrder(order: SalesOrder) {
+    try {
+      await advanceOrder(order);
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Erro ao avançar status da OV", error);
+      }
+    }
   }
 
-  async function changeTransport(order: SalesOrder, transportTypeId: string) {
-    await updateTransport.mutateAsync({ id: order.id, transportTypeId });
-    dispatch(domainEventRequested(`Transporte da ${order.code} alterado`));
+  async function handleChangeOrderTransport(
+    order: SalesOrder,
+    transportTypeId: string
+  ) {
+    try {
+      await changeOrderTransport(order, transportTypeId);
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error(
+          "Erro ao alterar transporte da OV",
+          error
+        );
+      }
+    }
   }
 
   return (
@@ -63,36 +96,34 @@ export function SalesOrdersWorkspace() {
           items={items.data ?? []}
           createSalesOrder={createSalesOrder}
           lastEvent={lastEvent ?? ""}
-          onSubmit={onSubmit}
+          onSubmit={handleCreateOrder}
           transportTypes={transportTypes.data ?? []}
         />
-
         <div className="grid gap-3">
           {HAS_NO_ORDERS ? (
             <>
-            <SalesOrdersTable
-              orders={orders}
-              customers={customers.data ?? []}
-              transportTypes={transportTypes.data ?? []}
-              isUpdating={updateStatus.isPending}
-              onSelect={(id: string)=>dispatch(salesOrderSelected(id))}
-              onAdvance={advance}
-            />
-            {selectedOrder && (
-              <SalesOrderDetails
-                order={selectedOrder}
-                items={items.data ?? []}
+              <SalesOrdersTable
+                orders={orders}
+                customers={customers.data ?? []}
                 transportTypes={transportTypes.data ?? []}
-                updateTransport={updateTransport}
-                updateStatus={updateStatus}
-                onChangeTransport={changeTransport}
-              /> 
-            )}            
-          </>
+                isUpdating={updateStatus.isPending}
+                onSelect={(id: string)=>dispatch(salesOrderSelected(id))}
+                onAdvance={handleAdvanceOrder}
+              />
+              {selectedOrder && (
+                <SalesOrderDetails
+                  order={selectedOrder}
+                  items={items.data ?? []}
+                  transportTypes={transportTypes.data ?? []}
+                  updateTransport={updateTransport}
+                  updateStatus={updateStatus}
+                  onChangeTransport={handleChangeOrderTransport}
+                /> 
+              )}            
+            </>
           ) : (
               <p className="px-3 py-4 text-sm text-muted">Nenhuma ordem de venda </p>
           )}
-           
         </div>
       </div>
     </Panel>
