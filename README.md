@@ -11,6 +11,19 @@ Aplicação monolítica modular para gestão do ciclo de vida de Ordens de Venda
 - Tailwind CSS
 - Docker
 
+## Como clonar o projeto
+
+Clone o repositório para sua máquina utilizando o Git:
+
+```bash
+git clone git@github.com:jpmuniz/thera.git
+```
+
+Em seguida, acesse o diretório do projeto:
+
+```bash
+cd thera
+```
 ## Como executar
 
 ```bash
