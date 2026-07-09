@@ -1,10 +1,7 @@
 "use client";
 
-import { ArrowRight, Check, Truck } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert } from "@/shared/components/Alert";
 import { Panel } from "@/shared/components/Panel";
 import { SalesOrderForm } from "./SalesOrderForm";
 import { SalesOrdersTable } from "./SalesOrdersTable";
@@ -15,15 +12,8 @@ import { useSalesOrders } from "@/modules/sales-orders/hooks/useSalesOrders";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { domainEventRequested, salesOrderSelected } from "@/store/uiSlice";
 import type { SalesOrder } from "@/shared/types";
+import { FormData, schema } from "../helpers/salesOrderForm.schema.ts"
 
-const schema = z.object({
-  customerId: z.string().min(1, "Selecione o cliente"),
-  transportTypeId: z.string().min(1, "Selecione o transporte"),
-  itemId: z.string().min(1, "Selecione um item"),
-  quantity: z.coerce.number().positive("Quantidade deve ser maior que zero")
-});
-
-type FormData = z.infer<typeof schema>;
 
 export function SalesOrdersWorkspace() {
   const dispatch = useAppDispatch();

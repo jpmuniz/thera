@@ -1,19 +1,10 @@
 import { Check } from "lucide-react";
 import type { Customer, Item, TransportType, SalesOrder } from "@/shared/types";
 import { CreateSalesOrderPayload } from "../api/salesOrdersApi";  
-import { z } from "zod";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Alert } from "@/shared/components/Alert";
 import { UseFormReturn } from "react-hook-form";
-
-const schema = z.object({
-  customerId: z.string().min(1, "Selecione o cliente"),
-  transportTypeId: z.string().min(1, "Selecione o transporte"),
-  itemId: z.string().min(1, "Selecione um item"),
-  quantity: z.coerce.number().positive("Quantidade deve ser maior que zero")
-});
-
-type FormData = z.infer<typeof schema>;
+import { FormData } from "../helpers/salesOrderForm.schema.ts"
 
 type SalesOrderData = {
   form: UseFormReturn<FormData>;
