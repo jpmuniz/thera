@@ -70,7 +70,9 @@ export function SalesOrderForm ({form, customers, items, createSalesOrder, lastE
                 className="w-full min-w-0 rounded-md border border-line px-3 py-2"
                 type="number"
                 min="1"
-                {...form.register("quantity")}
+                {...form.register("quantity", {
+                  valueAsNumber: true,
+                })}
               />
             </label>
           </div>
