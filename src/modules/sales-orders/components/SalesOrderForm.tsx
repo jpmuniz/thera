@@ -4,7 +4,7 @@ import { CreateSalesOrderPayload } from "../api/salesOrdersApi";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Alert } from "@/shared/components/Alert";
 import { UseFormReturn } from "react-hook-form";
-import { FormData } from "../helpers/salesOrderForm.schema.ts"
+import { FormData } from "../helpers/salesOrderForm.schema"
 
 type SalesOrderData = {
   form: UseFormReturn<FormData>;

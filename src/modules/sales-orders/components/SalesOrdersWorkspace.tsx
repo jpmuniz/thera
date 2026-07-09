@@ -12,7 +12,7 @@ import { useSalesOrders } from "@/modules/sales-orders/hooks/useSalesOrders";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { domainEventRequested, salesOrderSelected } from "@/store/uiSlice";
 import type { SalesOrder } from "@/shared/types";
-import { FormData, schema } from "../helpers/salesOrderForm.schema.ts"
+import { FormData, schema } from "../helpers/salesOrderForm.schema"
 
 
 export function SalesOrdersWorkspace() {
