@@ -9,7 +9,7 @@ import { Panel } from "@/shared/components/Panel";
 import { formatDate } from "@/shared/utils/format";
 import { useSalesOrders } from "@/modules/sales-orders/hooks/useSalesOrders";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { domainEventRequested, salesOrderSelected } from "@/store/uiSlice";
+import { salesOrderSelected } from "@/store/uiSlice";
 
 const schema = z.object({
   salesOrderId: z.string().min(1, "Selecione a OV"),
@@ -52,7 +52,6 @@ export function SchedulingCenter() {
         }
       });
       dispatch(salesOrderSelected(data.salesOrderId));
-      dispatch(domainEventRequested("Agendamento atualizado"));
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.error("Erro ao atualizar agendamento:", error);
