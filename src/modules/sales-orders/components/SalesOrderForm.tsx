@@ -86,7 +86,7 @@ export function SalesOrderForm ({form, customers, items, createSalesOrder, lastE
             disabled={createSalesOrder.isPending}
             type="submit"
           >
-            <Check size={16} /> Criar OV
+            <Check size={16} /> Criar Ordem de venda
           </button>
           {lastEvent && (
             <Alert live="polite" variant="success">
