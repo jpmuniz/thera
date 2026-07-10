@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Panel } from "@/shared/components/Panel";
@@ -11,15 +10,15 @@ import { useRegistrations } from "@/modules/registrations/hooks/useRegistrations
 import { useSalesOrdersActions } from "@/modules/sales-orders/hooks/useSalesOrdersActions";
 import { useSalesOrders } from "@/modules/sales-orders/hooks/useSalesOrders";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { salesOrderSelected } from "@/store/uiSlice";
+import { salesOrderSelected, domainEventRequested } from "@/store/uiSlice";
 import { FormData, schema } from "../helpers/salesOrderForm.schema"
 import type { SalesOrder } from "@/shared/types";
 
 export function SalesOrdersWorkspace() {
   const dispatch = useAppDispatch();
-  const [successMessage, setSuccessMessage] = useState("");
   const filters = useAppSelector((state) => state.monitoring);
   const selectedId = useAppSelector((state) => state.ui.selectedSalesOrderId);
+  const lastEvent = useAppSelector((state) => state.ui.lastEvent);
   const { customers, transportTypes, items } = useRegistrations();
 
   const {
@@ -46,14 +45,14 @@ export function SalesOrdersWorkspace() {
 
   async function handleCreateOrder(data: FormData) {
     try {
-      const response = await createOrder(data);
+      await createOrder(data);
       form.reset({
         customerId: "",
         transportTypeId: "",
         itemId: "",
         quantity: 1,
       });
-      setSuccessMessage(`${response?.code} criada`);
+      dispatch(domainEventRequested(""));
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.error("Erro ao criar ordem de venda", error);
@@ -62,6 +61,7 @@ export function SalesOrdersWorkspace() {
   }
 
   async function handleAdvanceOrder(order: SalesOrder) {
+    
     try {
       await advanceOrder(order);
     } catch (error) {
@@ -95,7 +95,7 @@ export function SalesOrdersWorkspace() {
           customers={customers.data ?? []}
           items={items.data ?? []}
           createSalesOrder={createSalesOrder}
-          lastEvent={successMessage ?? ""}
+          lastEvent={lastEvent ?? ""}
           onSubmit={handleCreateOrder}
           transportTypes={transportTypes.data ?? []}
         />

@@ -32,7 +32,7 @@ export function SalesOrdersTable({
   );
 
   return (
-    <div className="max-h-[360px] overflow-auto rounded-md border border-line">
+    <div className="h-[400px] overflow-auto rounded-md border border-line">
       <table className="w-full min-w-[620px] text-left text-sm">
         <caption className="sr-only">
           Ordens de Venda cadastradas e ações de avanço de status

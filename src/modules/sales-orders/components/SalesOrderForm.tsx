@@ -23,7 +23,7 @@ type SalesOrderData = {
 
 export function SalesOrderForm ({form, customers, items, createSalesOrder, lastEvent, transportTypes,onSubmit}: SalesOrderData){
     return (
-        <form className="grid gap-3 max-h-[400px] rounded-md border border-line bg-surface p-3" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="grid gap-3 h-[400px] rounded-md border border-line bg-surface p-3" onSubmit={form.handleSubmit(onSubmit)}>
           <h3 className="text-sm font-semibold text-ink">Nova Ordem de Venda</h3>
           <label className="grid gap-1 text-sm font-medium text-ink">
             <span>Cliente</span>
@@ -86,7 +86,7 @@ export function SalesOrderForm ({form, customers, items, createSalesOrder, lastE
             disabled={createSalesOrder.isPending}
             type="submit"
           >
-            <Check size={16} /> Criar Ordem de venda
+            <Check size={16} /> Criar ordem de venda
           </button>
           {lastEvent && (
             <Alert live="polite" variant="success">
