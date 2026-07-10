@@ -26,6 +26,8 @@ cd thera
 ```
 ## Como executar
 
+Execute na branch master
+
 ```bash
 npm install
 npm run dev
