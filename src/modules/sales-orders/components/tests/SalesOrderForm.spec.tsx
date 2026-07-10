@@ -74,7 +74,7 @@ describe("SalesOrderForm", () => {
 
     expect(
       screen.getByRole("button", {
-        name: /criar ov/i,
+        name: /Criar ordem de venda/i,
       })
     ).toBeInTheDocument();
   });
@@ -110,7 +110,7 @@ describe("SalesOrderForm", () => {
 
     await user.click(
       screen.getByRole("button", {
-        name: /criar ov/i,
+        name: /Criar ordem de venda/i,
       })
     );
 
@@ -153,7 +153,7 @@ describe("SalesOrderForm", () => {
 
     expect(
       screen.getByRole("button", {
-        name: /criar ov/i,
+        name: /Criar ordem de venda/i,
       })
     ).toBeDisabled();
   });

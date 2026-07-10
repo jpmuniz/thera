@@ -54,7 +54,7 @@ npm run verify
 
 O projeto segue um monolito modular. Cada contexto concentra suas próprias APIs client-side, hooks, componentes, features e helpers:
 
-- `src/modules/sales-orders`: criação, consulta, detalhes e transição de status de OVs.
+- `src/modules/sales-orders`: criação, consulta, detalhes e transição de status de ordem de vendas.
 - `src/modules/scheduling`: agenda, confirmação e reagendamento.
 - `src/modules/registrations`: cadastros de clientes, transportes e itens.
 - `src/modules/monitoring`: filtros e visão operacional.
@@ -66,12 +66,12 @@ O projeto segue um monolito modular. Cada contexto concentra suas próprias APIs
 ## Regras implementadas
 
 - Cliente possui lista de transportes autorizados.
-- OV só é criada quando o transporte escolhido está autorizado para o cliente.
-- OV exige cliente, exatamente um transporte, ao menos um item cadastrado e status válido.
+- Ordem de venda só é criada quando o transporte escolhido está autorizado para o cliente.
+- Ordem de venda exige cliente, exatamente um transporte, ao menos um item cadastrado e status válido.
 - Fluxo de status permitido: `CRIADA -> PLANEJADA -> AGENDADA -> EM_TRANSPORTE -> ENTREGUE`.
 - Transições fora da sequência retornam erro pela API e são tratadas na UI.
 - Agendamento permite data, janela, confirmação e reagendamento.
-- Auditoria registra criação de OV, mudança de status, alteração de agenda e transporte.
+- Auditoria registra criação de ordem de venda, mudança de status, alteração de agenda e transporte.
 
 ## Segurança
 
